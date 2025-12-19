@@ -7,21 +7,21 @@ from matplotlib.widgets import RectangleSelector
 # --- System Parameters ---
 # These parameters are now defined in the main scope so they can be
 # accessed by both the 'system' function and the initial conditions.
-Gamma = 20  # Pumping rate
-d1_0 = 3.0e16   # Starting value for d1
-d2_0 = 3.0e16   # Starting  value for d2
+Gamma = 2   # Pumping rate
+d1_0 = 6.8e16   # Starting value for d1
+d2_0 = 6.8e16   # Starting  value for d2
 
 # Define the system of 6 coupled ODEs with named variables
 def system(t, y):
     d1, d2, a1, a2, phi1, phi2 = y
 
-    T1 = 15.0 #T1 longitudinal relaxation
-    T2 = 0.8  #transverse relaxation
-    coupling_beta = 6.44662e-16 
+    T1 = 15.0
+    T2 = 0.13
+    coupling_beta = 6.44662e-16
     deltaNu = 7.1 # Distance (in Hz) between peaks
-    nu0 = 50 #nutation frequency
-    epsilon = 1e-20
-    f_off = 0 # frequency offset to move both signals positive
+    nu0 = 1e6
+    epsilon = 1e-22
+    f_off = 15 # frequency offset to move both signals positive
 
     # The dd1_dt and dd2_dt equations have been updated to include a pumping term.
     dd1_dt = Gamma * (d1_0 - d1) - (d1 / T1) - 4 * coupling_beta * (a1**2 + a1 * a2 * np.cos(phi1 - phi2))
@@ -36,7 +36,7 @@ def system(t, y):
     return [dd1_dt, dd2_dt, da1_dt, da2_dt, dphi1_dt, dphi2_dt]
 
 # Time span and initial conditions
-t_f = 100
+t_f = 65
 t_span = (0, t_f)
 t_eval = np.linspace(*t_span, 200*t_f)
 initial_conditions = [d1_0, d2_0, 1e10, 1e10, np.pi/2, np.pi/3]  # [d1, d2, a1, a2, phi1, phi2]
